@@ -2,10 +2,10 @@ import { EAudioStatus, ISubject } from '../../types';
 
 type CreateSubject = {
   title: string;
-  description: string;
+  body: string;
 };
 
-export const createSubject = ({ title, description }: CreateSubject): ISubject => {
+export const createSubject = ({ title, body }: CreateSubject): ISubject => {
   return {
     id: 1,
     title: 'The Future of Renewable Energy',
