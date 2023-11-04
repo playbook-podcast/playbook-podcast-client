@@ -1,37 +1,12 @@
-# Vite + React + Typescript + Eslint + Prettier
+# Playbook Podcast
 
-A starter for React with Typescript with the fast Vite and all static code testing with Eslint and formatting with Prettier.
+**Playbook Podcast** - is a feature that converts subjects to podcasts.
 
-![Vite + React + Typescript + Eslint + Prettier](/resources/screenshot.png)
+### Problem
 
-I found out about Vite and I wanted to have a boilerplate for the technologies that I use. You can find more about these in the following links: [Vite](https://github.com/vitejs/vite), [React](https://reactjs.org/), [Typescript](https://www.typescriptlang.org/), [Eslint](https://eslint.org/), [Prettier](https://prettier.io/).
+Problem
+Modern employees are challenged by the demands of a fast-paced work environment, where staying abreast of industry subjects and content is crucial, yet finding time for traditional reading is often unfeasible. They need to maximize every minute, whether in transit, performing tasks that don't require their full attention, or during quick breaks. Furthermore, inclusivity is key in the workplace, as team members with visual impairments or who struggle with reading should have equal access to professional development materials and company updates.
 
-## Installation
+### Solution
 
-Clone the repo and run `yarn install`
-
-or Run command
-
-```
-npx degit TheSwordBreaker/vite-reactts-eslint-prettier project-name
-```
-
-## Start
-
-After the successfull installation of the packages: `yarn dev`
-
-## Steps in Vscode
-
-#### (works with better with this template)
-
-1. Install Eslint and prettier extension for vs code.
-2. Make Sure Both are enabled
-3. Make sure all packages are Installed. (Mostly Eslint and prettier in node_modules)
-4. Enable formatOnSave of vs code
-5. Open a .tsx file and check if the bottom right corners of vs code have Eslint and Prettier with a double tick
-
-![Screenshot (253)_LI](https://user-images.githubusercontent.com/52120562/162486286-7383a737-d555-4f9b-a4dd-c4a81deb7b96.jpg)
-
-If Everything is Good Then It Should Work, but let me new if something else happens
-
-Made with ❤️ by theSwordBreaker(we Destory all types of sword ⚡)
+PlayBookPodcast addresses these challenges by providing an innovative feature where users can convert subjects into audio files seamlessly. This app enhances accessibility through audio playback functionality. By integrating text-to-speech technology, users can listen to their favorite subjects in a hands-free mode, making information consumption possible while engaging in other activities. The voicing mode is especially user-friendly, offering features like audio rewinding by clicking on a word and visual enhancements to support easy navigation through the content.
