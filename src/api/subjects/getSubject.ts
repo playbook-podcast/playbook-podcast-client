@@ -143,7 +143,7 @@ export const getSubject = (id: string): ISubject => {
         text: 'coming decades.',
         start: '00:22.000',
         end: '00:23.000',
-      }
+      },
     ],
     summary:
       'Exploration of the advances and future potential of renewable energy sources such as solar, wind, tidal, and geothermal power.',
