@@ -6,7 +6,7 @@ export enum EAudioStatus {
 export interface ISubjectListItem {
   id: number;
   title: string;
-  audioStatus: AudioStatus;
+  audioStatus: EAudioStatus;
 }
 
 export interface ISubject extends ISubjectListItem {
