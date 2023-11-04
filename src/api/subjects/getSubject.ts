@@ -1,4 +1,4 @@
-import { AudioStatus, ISubject } from '../../types';
+import { EAudioStatus, ISubject } from '../../types';
 
 export const getSubject = (id: string): ISubject => {
   return {
