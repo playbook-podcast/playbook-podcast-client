@@ -1,4 +1,4 @@
-import { AudioStatus, ISubject } from '../../types';
+import { EAudioStatus, ISubject } from '../../types';
 
 type CreateSubject = {
   title: string;
