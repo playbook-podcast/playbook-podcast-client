@@ -5,27 +5,27 @@ export const getAllSubjects = (): ISubjectListItem[] => {
     {
       id: 1,
       title: 'The Future of Renewable Energy',
-      audioStatus: AudioStatus.pending,
+      audioStatus: EAudioStatus.PENDING,
     },
     {
       id: 2,
       title: 'Exploring the Deep Ocean',
-      audioStatus: AudioStatus.done,
+      audioStatus: EAudioStatus.DONE,
     },
     {
       id: 3,
       title: 'Advances in Artificial Intelligence',
-      audioStatus: AudioStatus.done,
+      audioStatus: EAudioStatus.DONE,
     },
     {
       id: 4,
       title: 'The Role of Diet in Longevity',
-      audioStatus: AudioStatus.done,
+      audioStatus: EAudioStatus.DONE,
     },
     {
       id: 5,
       title: 'Smart Cities: The Intersection of Technology and Urban Planning',
-      audioStatus: AudioStatus.done,
+      audioStatus: EAudioStatus.DONE,
     },
   ];
 };
