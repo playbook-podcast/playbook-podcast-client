@@ -1,6 +1,6 @@
-export enum AudioStatus {
-  pending = 'pending',
-  done = 'done',
+export enum EAudioStatus {
+  PENDING = 'pending',
+  DONE = 'done',
 }
 
 export interface ISubjectListItem {
