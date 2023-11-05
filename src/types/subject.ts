@@ -12,13 +12,14 @@ export interface ISubjectListItem {
 export type SubjectBodyItemProps = {
   id: number;
   text: string;
-  start: string;
-  end: string;
+  start: number;
+  end: number;
 };
 
 export interface ISubject extends ISubjectListItem {
   body: string;
   // TODO: unify bodyParsed key with backend
+  audioLink?: string;
   bodyParsed: SubjectBodyItemProps[];
   summary: string;
 }
