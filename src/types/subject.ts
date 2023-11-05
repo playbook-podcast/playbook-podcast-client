@@ -8,8 +8,8 @@ export interface ISubjectListItem {
   title: string;
   audioStatus: EAudioStatus;
   // TODO: unify bodyParsed key with backend
-  timeToRead: number;
-  timeToListen: number;
+  bodyEstimateReadingTime: string;
+  bodyAudioDuration: string;
 }
 
 export type TranscriptionItemProps = {

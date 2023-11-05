@@ -56,7 +56,13 @@ const CardSubjectAction = styled(Box)(
   `,
 );
 
-const CardSubject = ({ title, id, emoji }: ISubjectListItem & { emoji: string }) => {
+const CardSubject = ({
+  title,
+  id,
+  emoji,
+  bodyAudioDuration,
+  bodyEstimateReadingTime,
+}: ISubjectListItem & { emoji: string }) => {
   return (
     <Link
       to={ERouting.SUBJECT.replace(':subjectId', id.toString())}
@@ -68,7 +74,7 @@ const CardSubject = ({ title, id, emoji }: ISubjectListItem & { emoji: string })
           <Box>
             <Typography>{title}</Typography>
             <Typography variant={'body2'} color={'text.secondary'}>
-              ~12 min read | ~3 min listen
+              ~{bodyEstimateReadingTime} read | ~{bodyAudioDuration} listen
             </Typography>
           </Box>
         </Box>
@@ -112,6 +118,8 @@ export const PageHome = () => {
 
     getData();
   }, []);
+
+  console.log(subjects);
 
   const subjectsWithEmojis = addEmojisToArray(subjects, EMOJIS_MOCK);
 

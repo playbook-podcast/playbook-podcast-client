@@ -11,7 +11,6 @@ import { useNavigate } from 'react-router-dom';
 
 import { createSubject } from '../api';
 import { ERouting } from '../constants';
-import { setIdToUrl } from '../helpers';
 
 type SubjectFormData = {
   title: string;
@@ -29,17 +28,19 @@ export const PageCreateSubject = () => {
     setFormData({ ...formData, [name]: value });
   };
 
-  const handleSubmit = (event: FormEvent) => {
+  const handleSubmit = async (event: FormEvent) => {
     event.preventDefault();
     setIsLoading(true);
-
-    void createSubject(formData)
-      .then(({ id }) => {
-        navigate(setIdToUrl(ERouting.SUBJECT, { subjectId: id }));
-      })
-      .finally(() => {
-        setIsLoading(false);
-      });
+    try {
+      const result = await createSubject(formData);
+      if (result) {
+        navigate(ERouting.HOME);
+      }
+    } catch (err) {
+      console.log(err);
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   return (

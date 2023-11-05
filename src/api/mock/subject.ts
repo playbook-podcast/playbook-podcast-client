@@ -39,8 +39,7 @@ export const SUBJECT_MOCK: ISubject = {
         start: 17440,
       },
     ],
-    audioUrl:
-      'https://45dfbd071387.ngrok.app//rails/active_storage/blobs/redirect/eyJfcmFpbHMiOnsibWVzc2FnZSI6IkJBaHBIQT09IiwiZXhwIjpudWxsLCJwdXIiOiJibG9iX2lkIn19--b44eca07f95f76fc358d8c2f5f6b0504102aaece/24_1699161604.wav',
+    audioUrl: 'https://dcs.megaphone.fm/NPR8535117753.mp3',
   },
 
   body: {
@@ -77,8 +76,7 @@ export const SUBJECT_MOCK: ISubject = {
         start: 17440,
       },
     ],
-    audioUrl:
-      'https://45dfbd071387.ngrok.app//rails/active_storage/blobs/redirect/eyJfcmFpbHMiOnsibWVzc2FnZSI6IkJBaHBIQT09IiwiZXhwIjpudWxsLCJwdXIiOiJibG9iX2lkIn19--b44eca07f95f76fc358d8c2f5f6b0504102aaece/24_1699161604.wav',
+    audioUrl: 'https://dcs.megaphone.fm/NPR8535117753.mp3',
   },
   summary: {
     text: 'text',
@@ -114,8 +112,7 @@ export const SUBJECT_MOCK: ISubject = {
         start: 17440,
       },
     ],
-    audioUrl:
-      'https://45dfbd071387.ngrok.app//rails/active_storage/blobs/redirect/eyJfcmFpbHMiOnsibWVzc2FnZSI6IkJBaHBIQT09IiwiZXhwIjpudWxsLCJwdXIiOiJibG9iX2lkIn19--b44eca07f95f76fc358d8c2f5f6b0504102aaece/24_1699161604.wav',
+    audioUrl: 'https://dcs.megaphone.fm/NPR8535117753.mp3',
   },
   audioStatus: EAudioStatus.DONE,
 };

@@ -225,7 +225,7 @@ export const PageSubject = () => {
         </Typography>
       </Box>
 
-      <Stack spacing={'8px'}>
+      <Stack spacing={'8px'} mb={10}>
         {subject?.[ESubjectSections.INTRODUCTION].text && (
           <SectionSubject
             isModeActive={activeSection === ESubjectSections.INTRODUCTION}
