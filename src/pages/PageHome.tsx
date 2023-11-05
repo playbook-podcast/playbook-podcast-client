@@ -6,7 +6,7 @@ import { Link, useNavigate } from 'react-router-dom';
 
 import { getAllSubjects } from '../api';
 import { EMOJIS_MOCK } from '../assets';
-import { Button } from '../components';
+import { Button, Loader } from '../components';
 import { ERouting } from '../constants';
 import { EColorName } from '../constants/palette';
 import { addEmojisToArray } from '../helpers';
@@ -57,8 +57,6 @@ const CardSubjectAction = styled(Box)(
 );
 
 const CardSubject = ({ title, id, emoji }: ISubjectListItem & { emoji: string }) => {
-  const [isHovered, setIsHovered] = useState<boolean>(false);
-
   return (
     <Link
       to={ERouting.SUBJECT.replace(':subjectId', id.toString())}
@@ -94,15 +92,31 @@ const CardSubject = ({ title, id, emoji }: ISubjectListItem & { emoji: string })
 export const PageHome = () => {
   const [subjects, setSubjects] = useState<ISubjectListItem[]>([]);
   const navigate = useNavigate();
+  const [isLoading, setIsLoading] = useState<boolean>(true); // State to manage loading status
 
   useEffect(() => {
-    getAllSubjects().then(setSubjects);
+    const getData = async () => {
+      try {
+        setIsLoading(true);
+        const fetchedSubject = await getAllSubjects();
+
+        if (fetchedSubject) {
+          setSubjects(fetchedSubject);
+        }
+      } catch (err) {
+        console.log(err);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    getData();
   }, []);
 
   const subjectsWithEmojis = addEmojisToArray(subjects, EMOJIS_MOCK);
 
   return (
-    <>
+    <Box display="flex" flexDirection="column" flexGrow={1}>
       <Box mb={'24px'} display={'flex'} justifyContent={'space-between'}>
         <Typography component={'h1'} variant={'h1'}>
           Subject list
@@ -116,17 +130,21 @@ export const PageHome = () => {
         </Button>
       </Box>
 
-      <Box>
-        {subjectsWithEmojis.length > 0 ? (
-          <Stack spacing={'8px'}>
-            {subjectsWithEmojis.map(({ id, ...restProps }) => (
-              <CardSubject key={id} {...restProps} id={id} />
-            ))}
-          </Stack>
-        ) : (
-          <Typography>No subjects</Typography>
-        )}
-      </Box>
-    </>
+      {isLoading ? (
+        <Loader />
+      ) : (
+        <Box>
+          {subjectsWithEmojis.length > 0 ? (
+            <Stack spacing={'8px'}>
+              {subjectsWithEmojis.map(({ id, ...restProps }) => (
+                <CardSubject key={id} {...restProps} id={id} />
+              ))}
+            </Stack>
+          ) : (
+            <Typography>No subjects</Typography>
+          )}
+        </Box>
+      )}
+    </Box>
   );
 };
