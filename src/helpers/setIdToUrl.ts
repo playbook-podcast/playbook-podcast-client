@@ -1,4 +1,4 @@
-export const transformRouteId = (
+export const setIdToUrl = (
   template: string,
   values: Record<string, string | number>,
 ): string => {

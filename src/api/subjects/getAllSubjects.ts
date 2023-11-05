@@ -1,31 +1,13 @@
-import { EAudioStatus, ISubjectListItem } from '../../types';
+import { Api } from '../../constants';
+import { APP_MODE } from '../../constants/app';
+import { EAppMode, ISubjectListItem } from '../../types';
+import { axiosInstance } from '../http';
+import { SUBJECTS_MOCK } from '../mock';
 
-export const getAllSubjects = (): ISubjectListItem[] => {
-  return [
-    {
-      id: 1,
-      title: 'The Future of Renewable Energy',
-      audioStatus: EAudioStatus.PENDING,
-    },
-    {
-      id: 2,
-      title: 'Exploring the Deep Ocean',
-      audioStatus: EAudioStatus.DONE,
-    },
-    {
-      id: 3,
-      title: 'Advances in Artificial Intelligence',
-      audioStatus: EAudioStatus.DONE,
-    },
-    {
-      id: 4,
-      title: 'The Role of Diet in Longevity',
-      audioStatus: EAudioStatus.DONE,
-    },
-    {
-      id: 5,
-      title: 'Smart Cities: The Intersection of Technology and Urban Planning',
-      audioStatus: EAudioStatus.DONE,
-    },
-  ];
+export const getAllSubjects = (): Promise<ISubjectListItem[]> => {
+  if (APP_MODE === EAppMode.DEVELOPMENT) {
+    return new Promise<ISubjectListItem[]>((resolve) => resolve(SUBJECTS_MOCK));
+  }
+
+  return axiosInstance.get(Api.SUBJECTS);
 };
