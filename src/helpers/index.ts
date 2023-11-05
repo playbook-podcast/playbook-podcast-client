@@ -1,2 +1,2 @@
 export * from './convertMillisecondsToTime';
-export * from './transformRouteId';
+export * from './setIdToUrl';

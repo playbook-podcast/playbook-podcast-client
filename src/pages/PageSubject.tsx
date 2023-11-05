@@ -79,11 +79,21 @@ export const PageSubject = () => {
   };
 
   useEffect(() => {
-    if (subjectId) {
-      const fetchedSubject = getSubject(subjectId);
+    const getData = async () => {
+      try {
+        if (subjectId) {
+          const fetchedSubject = await getSubject(subjectId);
 
-      setSubject(fetchedSubject);
-    }
+          if (fetchedSubject) {
+            setSubject(fetchedSubject);
+          }
+        }
+      } catch (err) {
+        console.log(err);
+      }
+    };
+
+    getData();
   }, []);
 
   const checkIsActive = (subjectBodyItem: SubjectBodyItemProps) =>
