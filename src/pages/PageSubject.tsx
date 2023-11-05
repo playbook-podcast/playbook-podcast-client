@@ -98,7 +98,7 @@ export const PageSubject = () => {
 
   const checkIsActive = (subjectBodyItem: SubjectBodyItemProps) =>
     playedMilliseconds >= subjectBodyItem.start &&
-    playedMilliseconds <= subjectBodyItem.end;
+    playedMilliseconds < subjectBodyItem.end;
 
   return (
     <Box>
@@ -117,7 +117,7 @@ export const PageSubject = () => {
                 component={'span'}
                 onClick={() => handleSubtextClick(subjectBodyItem)}
                 isActive={checkIsActive(subjectBodyItem)}
-                isRead={subjectBodyItem.end < playedMilliseconds}
+                isRead={subjectBodyItem.end <= playedMilliseconds}
               >
                 {subjectBodyItem.text}
               </SubjectText>
