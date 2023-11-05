@@ -28,7 +28,7 @@ export const PageHome = () => {
   const [subjects, setSubjects] = useState<ISubjectListItem[]>([]);
 
   useEffect(() => {
-    setSubjects(() => getAllSubjects());
+    getAllSubjects().then(setSubjects);
   }, []);
 
   return (

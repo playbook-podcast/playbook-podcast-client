@@ -11,7 +11,7 @@ import { useNavigate } from 'react-router-dom';
 
 import { createSubject } from '../api';
 import { ERouting } from '../constants';
-import { transformRouteId } from '../helpers';
+import { setIdToUrl } from '../helpers';
 
 type SubjectFormData = {
   title: string;
@@ -33,18 +33,13 @@ export const PageCreateSubject = () => {
     event.preventDefault();
     setIsLoading(true);
 
-    console.log('Form Data Submitted:', formData);
-
-    const data = createSubject(formData);
-
-    // Replace with api request
-    setTimeout(() => {
-      const redirectRoute = transformRouteId(ERouting.SUBJECT, { subjectId: data.id });
-
-      setIsLoading(false);
-
-      navigate(`/${redirectRoute}`);
-    }, 1000);
+    void createSubject(formData)
+      .then(({ id }) => {
+        navigate(setIdToUrl(ERouting.SUBJECT, { subjectId: id }));
+      })
+      .finally(() => {
+        setIsLoading(false);
+      });
   };
 
   return (

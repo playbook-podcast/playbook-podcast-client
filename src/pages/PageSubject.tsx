@@ -11,8 +11,8 @@ import { ChangeEvent, useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 
 import { getSubject } from '../api';
+import { convertTimeStringToTimestamp } from '../helpers';
 import { ISubject } from '../types';
-import { convertTimeStringToTimestamp } from '../utils';
 
 const BackgroundAudioMode = styled(Box)(({ isActive }: { isActive: boolean }) => {
   return css`
@@ -71,9 +71,9 @@ export const PageSubject = () => {
 
   useEffect(() => {
     if (subjectId) {
-      const fetchedSubject = getSubject(subjectId);
-
-      setSubject(fetchedSubject);
+      void getSubject(subjectId).then((data) => {
+        setSubject(data);
+      });
     }
   }, []);
 
@@ -91,6 +91,7 @@ export const PageSubject = () => {
           {subject?.bodyParsed?.map(({ id, text, start }) =>
             isModeActive ? (
               <SubjectText
+                key={`${id}/${text}/${start}`}
                 component={'span'}
                 onClick={() => setActiveId(id)}
                 isActive={id === activeId}
@@ -99,7 +100,9 @@ export const PageSubject = () => {
                 {text}
               </SubjectText>
             ) : (
-              <Typography component={'span'}>{text}</Typography>
+              <Typography key={`${id}/${text}/${start}`} component={'span'}>
+                {text}
+              </Typography>
             ),
           )}
         </SubjectTextContainer>

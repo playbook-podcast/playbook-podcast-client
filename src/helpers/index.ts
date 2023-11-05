@@ -1,1 +1,2 @@
-export * from './transformRouteId';
+export * from './convertTimeStringToTimestamp';
+export * from './setIdToUrl';
