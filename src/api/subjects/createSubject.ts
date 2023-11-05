@@ -1,7 +1,7 @@
 import { Api } from '../../constants';
 import { APP_MODE } from '../../constants/app';
 import { EAppMode, ISubject } from '../../types';
-import { PostSubject } from '../../types/api';
+import { PostSubject } from '../../types';
 import { axiosInstance, defaultConfigResponse } from '../http';
 import { SUBJECT_MOCK } from '../mock';
 

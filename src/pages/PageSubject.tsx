@@ -9,14 +9,19 @@ import {
   TypographyProps,
 } from '@mui/material';
 import { grey } from '@mui/material/colors';
-import { Dispatch, SetStateAction, useEffect, useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import ReactPlayer from 'react-player';
 import { useParams } from 'react-router-dom';
 
 import { getSubject } from '../api';
-import { AudioPlayer, IconButton } from '../components';
+import { AudioPlayer, IconButton, Loader } from '../components';
 import { EColorName } from '../constants/palette';
-import { ISubject, SubjectBodyItemProps } from '../types';
+import {
+  ESubjectSections,
+  ISubject,
+  SubjectSectionItem,
+  TranscriptionItemProps,
+} from '../types';
 
 const BackgroundAudioMode = styled(Box)(({ isActive }: { isActive: boolean }) => {
   return css`
@@ -47,7 +52,7 @@ const SubjectText = styled(Typography)(
     return css`
       color: ${isActive || isRead ? '#fff' : '#000'};
       opacity: ${isActive || !isRead ? 1 : 0.3};
-      transition: opacity 0.3s ease-in-out, color 0.3s ease-in-out;
+      transition: opacity 0.2s ease-in-out, color 0.2s ease-in-out;
       cursor: pointer;
       position: relative;
 
@@ -60,21 +65,21 @@ const SubjectText = styled(Typography)(
 );
 
 const SectionSubject = ({
-  title,
-  subject,
+  name,
+  subjectSection,
   onSubtextClick,
   playedMilliseconds,
+  toggleActiveSection,
   isModeActive,
-  setIsModeActive,
 }: {
-  title: string;
+  name: ESubjectSections;
   isModeActive: boolean;
-  setIsModeActive: Dispatch<SetStateAction<boolean>>;
-  subject: ISubject | null;
-  onSubtextClick: (props: SubjectBodyItemProps) => void;
+  toggleActiveSection: (sectionName: ESubjectSections) => void;
+  subjectSection: SubjectSectionItem;
+  onSubtextClick: (props: TranscriptionItemProps) => void;
   playedMilliseconds: number;
 }) => {
-  const checkIsActive = (subjectBodyItem: SubjectBodyItemProps) =>
+  const checkIsActive = (subjectBodyItem: TranscriptionItemProps) =>
     playedMilliseconds >= subjectBodyItem.start &&
     playedMilliseconds < subjectBodyItem.end;
 
@@ -87,16 +92,16 @@ const SectionSubject = ({
         p={'12px 16px'}
         alignItems={'center'}
       >
-        <Typography variant="h3" component="h2">
-          {title}
+        <Typography variant="h3" component="h2" textTransform="capitalize">
+          {name}
         </Typography>
         <Box position={'relative'}>
           {isModeActive ? (
-            <IconButton onClick={() => setIsModeActive(false)}>
+            <IconButton onClick={() => toggleActiveSection(name)}>
               <Cancel />
             </IconButton>
           ) : (
-            <IconButton color={'primary'} onClick={() => setIsModeActive(true)}>
+            <IconButton color={'primary'} onClick={() => toggleActiveSection(name)}>
               <PlayCircle />
             </IconButton>
           )}
@@ -104,7 +109,7 @@ const SectionSubject = ({
       </Box>
       <Box borderBottom={`1px solid ${grey['300']}`} />
       <SubjectTextContainer>
-        {subject?.bodyParsed?.map((subjectBodyItem) =>
+        {subjectSection.transcription?.map((subjectBodyItem) =>
           isModeActive ? (
             <SubjectText
               component={'span'}
@@ -127,9 +132,10 @@ export const PageSubject = () => {
   const { subjectId } = useParams();
   const audioPlayerRef = useRef<ReactPlayer>(null);
 
-  const [isModeActive, setIsModeActive] = useState<boolean>(false);
   const [playedMilliseconds, setPlayedMilliseconds] = useState<number>(0);
   const [duration, setDuration] = useState<number>(0);
+  const [activeSection, setActiveSection] = useState<ESubjectSections | null>();
+  const [isLoading, setIsLoading] = useState<boolean>(true); // State to manage loading status
 
   const [subject, setSubject] = useState<ISubject | null>(null);
 
@@ -139,13 +145,14 @@ export const PageSubject = () => {
     }
   };
 
-  const handleSubtextClick = (subjectBodyItem: SubjectBodyItemProps) => {
+  const handleSubtextClick = (subjectBodyItem: TranscriptionItemProps) => {
     seekToTime(subjectBodyItem.start);
   };
 
   useEffect(() => {
     const getData = async () => {
       try {
+        setIsLoading(true); // Set loading to true before fetching data
         if (subjectId) {
           const fetchedSubject = await getSubject(subjectId);
 
@@ -155,16 +162,33 @@ export const PageSubject = () => {
         }
       } catch (err) {
         console.log(err);
+      } finally {
+        setIsLoading(false); // Set loading to false after fetching data
       }
     };
 
     getData();
   }, []);
 
-  return (
-    <Box>
-      <BackgroundAudioMode isActive={isModeActive} />
+  const toggleActiveSection = (sectionName: ESubjectSections) => {
+    if (sectionName !== activeSection) {
+      setActiveSection(sectionName);
+      seekToTime(0);
+    } else if (sectionName === activeSection && duration === playedMilliseconds) {
+      seekToTime(0);
+      setActiveSection(null);
+    } else if (sectionName === activeSection) {
+      setActiveSection(null);
+    }
+  };
 
+  if (isLoading) {
+    return <Loader />;
+  }
+
+  return (
+    <>
+      <BackgroundAudioMode isActive={!!activeSection} />
       <Box display={'flex'} gap={'8px'} mb={'30px'} alignItems={'center'}>
         <Box
           width={'40px'}
@@ -184,36 +208,45 @@ export const PageSubject = () => {
       </Box>
 
       <Stack spacing={'8px'}>
-        <SectionSubject
-          title={'Introduction'}
-          isModeActive={isModeActive}
-          setIsModeActive={setIsModeActive}
-          subject={subject}
-          onSubtextClick={handleSubtextClick}
-          playedMilliseconds={playedMilliseconds}
-        />
-        <SectionSubject
-          // TODO: check the title
-          title={'Development Process'}
-          isModeActive={isModeActive}
-          setIsModeActive={setIsModeActive}
-          subject={subject}
-          onSubtextClick={handleSubtextClick}
-          playedMilliseconds={playedMilliseconds}
-        />
-        <SectionSubject
-          title={'Summary'}
-          isModeActive={isModeActive}
-          setIsModeActive={setIsModeActive}
-          subject={subject}
-          onSubtextClick={handleSubtextClick}
-          playedMilliseconds={playedMilliseconds}
-        />
+        {subject?.[ESubjectSections.INTRODUCTION] && (
+          <SectionSubject
+            isModeActive={activeSection === ESubjectSections.BODY}
+            name={ESubjectSections.INTRODUCTION}
+            toggleActiveSection={toggleActiveSection}
+            subjectSection={subject?.[ESubjectSections.INTRODUCTION]}
+            onSubtextClick={handleSubtextClick}
+            playedMilliseconds={playedMilliseconds}
+          />
+        )}
+
+        {subject?.[ESubjectSections.BODY] && (
+          <SectionSubject
+            name={ESubjectSections.BODY}
+            isModeActive={activeSection === ESubjectSections.BODY}
+            toggleActiveSection={toggleActiveSection}
+            subjectSection={subject?.[ESubjectSections.BODY]}
+            onSubtextClick={handleSubtextClick}
+            playedMilliseconds={playedMilliseconds}
+          />
+        )}
+
+        {subject?.[ESubjectSections.SUMMARY] && (
+          <SectionSubject
+            name={ESubjectSections.SUMMARY}
+            isModeActive={activeSection === ESubjectSections.SUMMARY}
+            toggleActiveSection={toggleActiveSection}
+            subjectSection={subject?.[ESubjectSections.SUMMARY]}
+            onSubtextClick={handleSubtextClick}
+            playedMilliseconds={playedMilliseconds}
+          />
+        )}
       </Stack>
-      {subject?.audioLink && (
+      {activeSection && subject?.[activeSection]?.audioUrl && (
         <AudioPlayer
-          url={subject.audioLink}
-          isVisible={isModeActive}
+          // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+          // @ts-ignore
+          url={subject[activeSection].audioUrl}
+          isVisible={!!activeSection}
           ref={audioPlayerRef}
           playedMilliseconds={playedMilliseconds}
           setDuration={setDuration}
@@ -221,6 +254,6 @@ export const PageSubject = () => {
           setPlayedMilliseconds={setPlayedMilliseconds}
         />
       )}
-    </Box>
+    </>
   );
 };

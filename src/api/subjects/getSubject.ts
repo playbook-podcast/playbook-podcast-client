@@ -1,17 +1,8 @@
 import { Api } from '../../constants';
-import { APP_MODE } from '../../constants/app';
 import { setIdToUrl } from '../../helpers';
-import { EAppMode, ISubject } from '../../types';
-import { axiosInstance, defaultConfigResponse } from '../http';
-import { SUBJECT_MOCK } from '../mock';
+import { ISubject } from '../../types';
+import { axiosInstance } from '../http';
 
-export const getSubject = (id: string): Promise<ISubject> => {
-  if (APP_MODE === EAppMode.DEVELOPMENT) {
-    return new Promise<ISubject>((resolve) => resolve(SUBJECT_MOCK));
-  }
-
-  return axiosInstance.get(
-    setIdToUrl(Api.SUBJECT_BY_ID, { id }),
-    defaultConfigResponse(),
-  );
+export const getSubject = async (id: string): Promise<ISubject> => {
+  return (await axiosInstance.get(setIdToUrl(Api.SUBJECT_BY_ID, { id }))).data;
 };

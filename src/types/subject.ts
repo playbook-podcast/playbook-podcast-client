@@ -12,17 +12,26 @@ export interface ISubjectListItem {
   timeToListen: number;
 }
 
-export type SubjectBodyItemProps = {
+export type TranscriptionItemProps = {
   id: number;
   text: string;
   start: number;
   end: number;
 };
 
+export type SubjectSectionItem = {
+  transcription: TranscriptionItemProps[];
+  audioUrl?: string;
+};
+
+export enum ESubjectSections {
+  INTRODUCTION = 'introduction',
+  BODY = 'body',
+  SUMMARY = 'summary',
+}
+
 export interface ISubject extends ISubjectListItem {
-  body: string;
-  // TODO: unify bodyParsed key with backend
-  audioLink?: string;
-  bodyParsed: SubjectBodyItemProps[];
-  summary: string;
+  [ESubjectSections.INTRODUCTION]: SubjectSectionItem;
+  [ESubjectSections.BODY]: SubjectSectionItem;
+  [ESubjectSections.SUMMARY]: SubjectSectionItem;
 }
