@@ -7,12 +7,13 @@ import {
   Typography,
   TypographyProps,
 } from '@mui/material';
-import { ChangeEvent, useEffect, useState } from 'react';
+import { ChangeEvent, useEffect, useRef, useState } from 'react';
+import ReactPlayer from 'react-player';
 import { useParams } from 'react-router-dom';
 
 import { getSubject } from '../api';
-import { convertTimeStringToTimestamp } from '../helpers';
-import { ISubject } from '../types';
+import { AudioPlayer } from '../components';
+import { ISubject, SubjectBodyItemProps } from '../types';
 
 const BackgroundAudioMode = styled(Box)(({ isActive }: { isActive: boolean }) => {
   return css`
@@ -55,8 +56,11 @@ const SubjectText = styled(Typography)(
 
 export const PageSubject = () => {
   const { subjectId } = useParams();
+  const audioPlayerRef = useRef<ReactPlayer>(null);
+
   const [isModeActive, setIsModeActive] = useState<boolean>(false);
-  const [activeId, setActiveId] = useState<number | null>(null);
+  const [playedMilliseconds, setPlayedMilliseconds] = useState<number>(0);
+  const [duration, setDuration] = useState<number>(0);
 
   const [subject, setSubject] = useState<ISubject | null>(null);
 
@@ -64,18 +68,37 @@ export const PageSubject = () => {
     setIsModeActive(checked);
   };
 
-  const activeFragment = subject?.bodyParsed?.find(({ id }) => id === activeId);
-  const activeFragmentTimestamp = activeFragment?.start
-    ? convertTimeStringToTimestamp(activeFragment?.start)
-    : 0;
+  const seekToTime = (time: number) => {
+    if (typeof audioPlayerRef.current?.seekTo === 'function') {
+      audioPlayerRef.current.seekTo(time / 1000);
+    }
+  };
+
+  const handleSubtextClick = (subjectBodyItem: SubjectBodyItemProps) => {
+    seekToTime(subjectBodyItem.start);
+  };
 
   useEffect(() => {
-    if (subjectId) {
-      void getSubject(subjectId).then((data) => {
-        setSubject(data);
-      });
-    }
+    const getData = async () => {
+      try {
+        if (subjectId) {
+          const fetchedSubject = await getSubject(subjectId);
+
+          if (fetchedSubject) {
+            setSubject(fetchedSubject);
+          }
+        }
+      } catch (err) {
+        console.log(err);
+      }
+    };
+
+    getData();
   }, []);
+
+  const checkIsActive = (subjectBodyItem: SubjectBodyItemProps) =>
+    playedMilliseconds >= subjectBodyItem.start &&
+    playedMilliseconds <= subjectBodyItem.end;
 
   return (
     <Box>
@@ -88,25 +111,33 @@ export const PageSubject = () => {
           {subject?.title}
         </Typography>
         <SubjectTextContainer>
-          {subject?.bodyParsed?.map(({ id, text, start }) =>
+          {subject?.bodyParsed?.map((subjectBodyItem) =>
             isModeActive ? (
               <SubjectText
-                key={`${id}/${text}/${start}`}
                 component={'span'}
-                onClick={() => setActiveId(id)}
-                isActive={id === activeId}
-                isRead={convertTimeStringToTimestamp(start) < activeFragmentTimestamp}
+                onClick={() => handleSubtextClick(subjectBodyItem)}
+                isActive={checkIsActive(subjectBodyItem)}
+                isRead={subjectBodyItem.end < playedMilliseconds}
               >
-                {text}
+                {subjectBodyItem.text}
               </SubjectText>
             ) : (
-              <Typography key={`${id}/${text}/${start}`} component={'span'}>
-                {text}
-              </Typography>
+              <Typography component={'span'}>{subjectBodyItem.text}</Typography>
             ),
           )}
         </SubjectTextContainer>
       </Paper>
+      {subject?.audioLink && (
+        <AudioPlayer
+          url={subject.audioLink}
+          isVisible={isModeActive}
+          ref={audioPlayerRef}
+          playedMilliseconds={playedMilliseconds}
+          setDuration={setDuration}
+          duration={duration}
+          setPlayedMilliseconds={setPlayedMilliseconds}
+        />
+      )}
     </Box>
   );
 };
