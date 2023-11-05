@@ -1,11 +1,14 @@
-import { Container } from '@mui/material';
+import { Box, Container } from '@mui/material';
+import { grey } from '@mui/material/colors';
 import { Outlet } from 'react-router-dom';
 
 import { Header } from './Header';
 
 export const MainContainer = () => (
-  <Container>
+  <Box sx={{ backgroundColor: grey['100'] }} minHeight={'100vh'}>
     <Header />
-    <Outlet />
-  </Container>
+    <Container sx={{ mt: '24px' }} maxWidth={'md'}>
+      <Outlet />
+    </Container>
+  </Box>
 );

@@ -1,5 +1,9 @@
-import { ProviderRouter } from './providers';
+import { ProviderRouter, ProviderTheme } from './providers';
 
 export const App = () => {
-  return <ProviderRouter />;
+  return (
+    <ProviderTheme>
+      <ProviderRouter />
+    </ProviderTheme>
+  );
 };

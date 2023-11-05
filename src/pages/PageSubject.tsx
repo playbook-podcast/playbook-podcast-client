@@ -107,7 +107,7 @@ export const PageSubject = () => {
         <Box width="100%" display="flex" justifyContent="flex-end">
           <Switch checked={isModeActive} onChange={handleSwitchChange} />
         </Box>
-        <Typography variant="h4" component="h2" gutterBottom>
+        <Typography variant="h1" component="h2" gutterBottom>
           {subject?.title}
         </Typography>
         <SubjectTextContainer>

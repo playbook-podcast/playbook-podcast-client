@@ -1,7 +1,7 @@
 import { Api } from '../../constants';
 import { APP_MODE } from '../../constants/app';
 import { EAppMode, ISubjectListItem } from '../../types';
-import { axiosInstance } from '../http';
+import { axiosInstance, defaultConfigResponse } from '../http';
 import { SUBJECTS_MOCK } from '../mock';
 
 export const getAllSubjects = (): Promise<ISubjectListItem[]> => {
@@ -9,5 +9,5 @@ export const getAllSubjects = (): Promise<ISubjectListItem[]> => {
     return new Promise<ISubjectListItem[]>((resolve) => resolve(SUBJECTS_MOCK));
   }
 
-  return axiosInstance.get(Api.SUBJECTS);
+  return axiosInstance.get(Api.SUBJECTS, defaultConfigResponse());
 };
