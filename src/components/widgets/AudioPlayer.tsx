@@ -10,6 +10,7 @@ import React, {
 } from 'react';
 import ReactPlayer from 'react-player';
 
+import { BASE_SERVER_URL } from '../../constants';
 import { convertMillisecondsToTime } from '../../helpers';
 
 const PlayerContainer = styled(Box)(({ isVisible }: { isVisible: boolean }) => {
@@ -115,11 +116,12 @@ export const AudioPlayer = forwardRef(
 
     const durationTime = convertMillisecondsToTime(duration);
     const playedTime = convertMillisecondsToTime(playedMilliseconds);
+    const audioUrl = BASE_SERVER_URL + url;
 
     return (
       <PlayerContainer isVisible={isVisible}>
         <ReactPlayer
-          url={url}
+          url={audioUrl}
           ref={reactPlayerRef}
           playing={playing}
           onDuration={onDuration}

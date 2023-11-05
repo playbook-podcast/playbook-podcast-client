@@ -18,8 +18,7 @@ export type SubjectBodyItemProps = {
 
 export interface ISubject extends ISubjectListItem {
   body: string;
-  // TODO: unify bodyParsed key with backend
-  audioLink?: string;
-  bodyParsed: SubjectBodyItemProps[];
+  bodyAudioUrl?: string;
+  bodyTranscription: SubjectBodyItemProps[];
   summary: string;
 }

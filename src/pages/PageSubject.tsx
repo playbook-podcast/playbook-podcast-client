@@ -42,7 +42,7 @@ const SubjectText = styled(Typography)(
     return css`
       color: ${isActive || isRead ? '#fff' : '#000'};
       opacity: ${isActive || !isRead ? 1 : 0.3};
-      transition: opacity 0.3s ease-in-out, color 0.3s ease-in-out;
+      transition: opacity 0.2s ease-in-out, color 0.2s ease-in-out;
       cursor: pointer;
       position: relative;
 
@@ -111,7 +111,7 @@ export const PageSubject = () => {
           {subject?.title}
         </Typography>
         <SubjectTextContainer>
-          {subject?.bodyParsed?.map((subjectBodyItem) =>
+          {subject?.bodyTranscription?.map((subjectBodyItem) =>
             isModeActive ? (
               <SubjectText
                 component={'span'}
@@ -127,9 +127,9 @@ export const PageSubject = () => {
           )}
         </SubjectTextContainer>
       </Paper>
-      {subject?.audioLink && (
+      {subject?.bodyAudioUrl && (
         <AudioPlayer
-          url={subject.audioLink}
+          url={subject.bodyAudioUrl}
           isVisible={isModeActive}
           ref={audioPlayerRef}
           playedMilliseconds={playedMilliseconds}
