@@ -20,6 +20,7 @@ export type TranscriptionItemProps = {
 };
 
 export type SubjectSectionItem = {
+  text: string;
   transcription: TranscriptionItemProps[];
   audioUrl?: string;
 };

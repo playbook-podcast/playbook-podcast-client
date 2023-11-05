@@ -5,6 +5,7 @@ import {
   Paper,
   Stack,
   styled,
+  Tooltip,
   Typography,
   TypographyProps,
 } from '@mui/material';
@@ -97,32 +98,49 @@ const SectionSubject = ({
         </Typography>
         <Box position={'relative'}>
           {isModeActive ? (
-            <IconButton onClick={() => toggleActiveSection(name)}>
+            <IconButton
+              disabled={!subjectSection.transcription}
+              onClick={() => toggleActiveSection(name)}
+            >
               <Cancel />
             </IconButton>
           ) : (
-            <IconButton color={'primary'} onClick={() => toggleActiveSection(name)}>
-              <PlayCircle />
-            </IconButton>
+            <Tooltip
+              title={
+                subjectSection.transcription ? 'Play audio' : 'Audio is not available'
+              }
+            >
+              <span>
+                <IconButton
+                  disabled={!subjectSection.transcription}
+                  color={'primary'}
+                  onClick={() => toggleActiveSection(name)}
+                >
+                  <PlayCircle />
+                </IconButton>
+              </span>
+            </Tooltip>
           )}
         </Box>
       </Box>
       <Box borderBottom={`1px solid ${grey['300']}`} />
       <SubjectTextContainer>
-        {subjectSection.transcription?.map((subjectBodyItem) =>
-          isModeActive ? (
-            <SubjectText
-              component={'span'}
-              onClick={() => onSubtextClick(subjectBodyItem)}
-              isActive={checkIsActive(subjectBodyItem)}
-              isRead={subjectBodyItem.end <= playedMilliseconds}
-            >
-              {subjectBodyItem.text}
-            </SubjectText>
-          ) : (
-            <Typography component={'span'}>{subjectBodyItem.text}</Typography>
-          ),
-        )}
+        {subjectSection.transcription
+          ? subjectSection.transcription?.map((subjectBodyItem) =>
+              isModeActive ? (
+                <SubjectText
+                  component={'span'}
+                  onClick={() => onSubtextClick(subjectBodyItem)}
+                  isActive={checkIsActive(subjectBodyItem)}
+                  isRead={subjectBodyItem.end <= playedMilliseconds}
+                >
+                  {subjectBodyItem.text}
+                </SubjectText>
+              ) : (
+                <Typography component={'span'}>{subjectBodyItem.text}</Typography>
+              ),
+            )
+          : subjectSection.text}
       </SubjectTextContainer>
     </Paper>
   );
@@ -208,9 +226,9 @@ export const PageSubject = () => {
       </Box>
 
       <Stack spacing={'8px'}>
-        {subject?.[ESubjectSections.INTRODUCTION] && (
+        {subject?.[ESubjectSections.INTRODUCTION].text && (
           <SectionSubject
-            isModeActive={activeSection === ESubjectSections.BODY}
+            isModeActive={activeSection === ESubjectSections.INTRODUCTION}
             name={ESubjectSections.INTRODUCTION}
             toggleActiveSection={toggleActiveSection}
             subjectSection={subject?.[ESubjectSections.INTRODUCTION]}
@@ -219,7 +237,7 @@ export const PageSubject = () => {
           />
         )}
 
-        {subject?.[ESubjectSections.BODY] && (
+        {subject?.[ESubjectSections.BODY].text && (
           <SectionSubject
             name={ESubjectSections.BODY}
             isModeActive={activeSection === ESubjectSections.BODY}
@@ -230,7 +248,7 @@ export const PageSubject = () => {
           />
         )}
 
-        {subject?.[ESubjectSections.SUMMARY] && (
+        {subject?.[ESubjectSections.SUMMARY].text && (
           <SectionSubject
             name={ESubjectSections.SUMMARY}
             isModeActive={activeSection === ESubjectSections.SUMMARY}

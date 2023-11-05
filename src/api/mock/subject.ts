@@ -6,6 +6,7 @@ export const SUBJECT_MOCK: ISubject = {
   timeToListen: Date.now(),
   title: 'The Future of Renewable Energy',
   introduction: {
+    text: 'text',
     transcription: [
       {
         id: 0,
@@ -43,6 +44,7 @@ export const SUBJECT_MOCK: ISubject = {
   },
 
   body: {
+    text: 'text',
     transcription: [
       {
         id: 0,
@@ -79,6 +81,7 @@ export const SUBJECT_MOCK: ISubject = {
       'https://45dfbd071387.ngrok.app//rails/active_storage/blobs/redirect/eyJfcmFpbHMiOnsibWVzc2FnZSI6IkJBaHBIQT09IiwiZXhwIjpudWxsLCJwdXIiOiJibG9iX2lkIn19--b44eca07f95f76fc358d8c2f5f6b0504102aaece/24_1699161604.wav',
   },
   summary: {
+    text: 'text',
     transcription: [
       {
         id: 0,
