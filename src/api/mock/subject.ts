@@ -1,7 +1,9 @@
-import { EAudioStatus, ISubject } from '../../types';
+import { EAudioStatus, ISubject, ISubjectListItem } from '../../types';
 
 export const SUBJECT_MOCK: ISubject = {
   id: 1,
+  timeToRead: Date.now(),
+  timeToListen: Date.now(),
   title: 'The Future of Renewable Energy',
   body: 'As the world increasingly seeks sustainable sources of energy, the future of renewable energy looks bright. With advances in solar technology, wind energy efficiencies, and the untapped potential of tidal and geothermal power, the landscape of energy production is rapidly changing. This article explores the innovations driving this transformation and what we might expect in the coming decades.',
   bodyTranscription: [
@@ -43,30 +45,40 @@ export const SUBJECT_MOCK: ISubject = {
   audioStatus: EAudioStatus.DONE,
 };
 
-export const SUBJECTS_MOCK = [
+export const SUBJECTS_MOCK: ISubjectListItem[] = [
   {
     id: 1,
     title: 'The Future of Renewable Energy',
     audioStatus: EAudioStatus.PENDING,
+    timeToRead: Date.now(),
+    timeToListen: Date.now(),
   },
   {
     id: 2,
     title: 'Exploring the Deep Ocean',
     audioStatus: EAudioStatus.DONE,
+    timeToRead: Date.now(),
+    timeToListen: Date.now(),
   },
   {
     id: 3,
     title: 'Advances in Artificial Intelligence',
     audioStatus: EAudioStatus.DONE,
+    timeToRead: Date.now(),
+    timeToListen: Date.now(),
   },
   {
     id: 4,
     title: 'The Role of Diet in Longevity',
     audioStatus: EAudioStatus.DONE,
+    timeToRead: Date.now(),
+    timeToListen: Date.now(),
   },
   {
     id: 5,
     title: 'Smart Cities: The Intersection of Technology and Urban Planning',
     audioStatus: EAudioStatus.DONE,
+    timeToRead: Date.now(),
+    timeToListen: Date.now(),
   },
 ];

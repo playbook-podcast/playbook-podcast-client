@@ -7,6 +7,9 @@ export interface ISubjectListItem {
   id: number;
   title: string;
   audioStatus: EAudioStatus;
+  // TODO: unify bodyParsed key with backend
+  timeToRead: number;
+  timeToListen: number;
 }
 
 export type SubjectBodyItemProps = {

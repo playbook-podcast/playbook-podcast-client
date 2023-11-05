@@ -98,7 +98,7 @@ export const PageSubject = () => {
 
   const checkIsActive = (subjectBodyItem: SubjectBodyItemProps) =>
     playedMilliseconds >= subjectBodyItem.start &&
-    playedMilliseconds <= subjectBodyItem.end;
+    playedMilliseconds < subjectBodyItem.end;
 
   return (
     <Box>
@@ -107,7 +107,7 @@ export const PageSubject = () => {
         <Box width="100%" display="flex" justifyContent="flex-end">
           <Switch checked={isModeActive} onChange={handleSwitchChange} />
         </Box>
-        <Typography variant="h4" component="h2" gutterBottom>
+        <Typography variant="h1" component="h2" gutterBottom>
           {subject?.title}
         </Typography>
         <SubjectTextContainer>
@@ -117,7 +117,7 @@ export const PageSubject = () => {
                 component={'span'}
                 onClick={() => handleSubtextClick(subjectBodyItem)}
                 isActive={checkIsActive(subjectBodyItem)}
-                isRead={subjectBodyItem.end < playedMilliseconds}
+                isRead={subjectBodyItem.end <= playedMilliseconds}
               >
                 {subjectBodyItem.text}
               </SubjectText>
