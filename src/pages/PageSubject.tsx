@@ -80,67 +80,59 @@ const SectionSubject = ({
   onSubtextClick: (props: TranscriptionItemProps) => void;
   playedMilliseconds: number;
 }) => {
-  const checkIsActive = (subjectBodyItem: TranscriptionItemProps) =>
-    playedMilliseconds >= subjectBodyItem.start &&
-    playedMilliseconds < subjectBodyItem.end;
+  const { transcription, text } = subjectSection;
+  const hasTranscription = !!transcription;
+
+  const handleToggle = () => toggleActiveSection(name);
+
+  const isActive = (item: TranscriptionItemProps, playedMillis: number) =>
+    playedMillis >= item.start && playedMillis < item.end;
 
   return (
-    <Paper variant={'outlined'}>
+    <Paper variant="outlined">
       <Box
-        width="100%"
-        display={'flex'}
-        justifyContent={'space-between'}
-        p={'12px 16px'}
-        alignItems={'center'}
+        sx={{
+          width: '100%',
+          display: 'flex',
+          justifyContent: 'space-between',
+          p: 2,
+          alignItems: 'center',
+        }}
       >
         <Typography variant="h3" component="h2" textTransform="capitalize">
           {name}
         </Typography>
-        <Box position={'relative'}>
-          {isModeActive ? (
-            <IconButton
-              disabled={!subjectSection.transcription}
-              onClick={() => toggleActiveSection(name)}
-            >
-              <Cancel />
-            </IconButton>
-          ) : (
-            <Tooltip
-              title={
-                subjectSection.transcription ? 'Play audio' : 'Audio is not available'
-              }
-            >
-              <span>
-                <IconButton
-                  disabled={!subjectSection.transcription}
-                  color={'primary'}
-                  onClick={() => toggleActiveSection(name)}
-                >
-                  <PlayCircle />
-                </IconButton>
-              </span>
-            </Tooltip>
-          )}
+        <Box position="relative">
+          <Tooltip title={hasTranscription ? 'Play audio' : 'Audio is not available'}>
+            <span>
+              <IconButton
+                disabled={!hasTranscription}
+                color={isModeActive ? 'default' : 'primary'}
+                onClick={handleToggle}
+              >
+                {isModeActive ? <Cancel /> : <PlayCircle />}
+              </IconButton>
+            </span>
+          </Tooltip>
         </Box>
       </Box>
-      <Box borderBottom={`1px solid ${grey['300']}`} />
+      <Box borderBottom={`1px solid ${grey[300]}`} />
       <SubjectTextContainer>
-        {subjectSection.transcription
-          ? subjectSection.transcription?.map((subjectBodyItem) =>
-              isModeActive ? (
-                <SubjectText
-                  component={'span'}
-                  onClick={() => onSubtextClick(subjectBodyItem)}
-                  isActive={checkIsActive(subjectBodyItem)}
-                  isRead={subjectBodyItem.end <= playedMilliseconds}
-                >
-                  {subjectBodyItem.text}
-                </SubjectText>
-              ) : (
-                <Typography component={'span'}>{subjectBodyItem.text}</Typography>
-              ),
-            )
-          : subjectSection.text}
+        {hasTranscription ? (
+          transcription.map((item) => (
+            <SubjectText
+              key={item.id}
+              component="span"
+              onClick={() => onSubtextClick(item)}
+              isActive={isActive(item, playedMilliseconds)}
+              isRead={item.end <= playedMilliseconds}
+            >
+              {item.text}
+            </SubjectText>
+          ))
+        ) : (
+          <Typography component="span">{text}</Typography>
+        )}
       </SubjectTextContainer>
     </Paper>
   );
@@ -153,7 +145,7 @@ export const PageSubject = () => {
   const [playedMilliseconds, setPlayedMilliseconds] = useState<number>(0);
   const [duration, setDuration] = useState<number>(0);
   const [activeSection, setActiveSection] = useState<ESubjectSections | null>();
-  const [isLoading, setIsLoading] = useState<boolean>(true); // State to manage loading status
+  const [isLoading, setIsLoading] = useState<boolean>(true);
 
   const [subject, setSubject] = useState<ISubject | null>(null);
 
@@ -170,7 +162,7 @@ export const PageSubject = () => {
   useEffect(() => {
     const getData = async () => {
       try {
-        setIsLoading(true); // Set loading to true before fetching data
+        setIsLoading(true);
         if (subjectId) {
           const fetchedSubject = await getSubject(subjectId);
 
@@ -178,10 +170,10 @@ export const PageSubject = () => {
             setSubject(fetchedSubject);
           }
         }
-      } catch (err) {
-        console.log(err);
+      } catch (error) {
+        console.log(error);
       } finally {
-        setIsLoading(false); // Set loading to false after fetching data
+        setIsLoading(false);
       }
     };
 
@@ -189,14 +181,15 @@ export const PageSubject = () => {
   }, []);
 
   const toggleActiveSection = (sectionName: ESubjectSections) => {
-    if (sectionName !== activeSection) {
-      setActiveSection(sectionName);
-      seekToTime(0);
-    } else if (sectionName === activeSection && duration === playedMilliseconds) {
+    const isSectionActive = sectionName === activeSection;
+    const isAtEndOfSection = duration === playedMilliseconds;
+
+    if (isSectionActive && isAtEndOfSection) {
       seekToTime(0);
       setActiveSection(null);
-    } else if (sectionName === activeSection) {
-      setActiveSection(null);
+    } else {
+      seekToTime(0);
+      setActiveSection(isSectionActive ? null : sectionName);
     }
   };
 
@@ -226,37 +219,18 @@ export const PageSubject = () => {
       </Box>
 
       <Stack spacing={'8px'} mb={10}>
-        {subject?.[ESubjectSections.INTRODUCTION].text && (
-          <SectionSubject
-            isModeActive={activeSection === ESubjectSections.INTRODUCTION}
-            name={ESubjectSections.INTRODUCTION}
-            toggleActiveSection={toggleActiveSection}
-            subjectSection={subject?.[ESubjectSections.INTRODUCTION]}
-            onSubtextClick={handleSubtextClick}
-            playedMilliseconds={playedMilliseconds}
-          />
-        )}
-
-        {subject?.[ESubjectSections.BODY].text && (
-          <SectionSubject
-            name={ESubjectSections.BODY}
-            isModeActive={activeSection === ESubjectSections.BODY}
-            toggleActiveSection={toggleActiveSection}
-            subjectSection={subject?.[ESubjectSections.BODY]}
-            onSubtextClick={handleSubtextClick}
-            playedMilliseconds={playedMilliseconds}
-          />
-        )}
-
-        {subject?.[ESubjectSections.SUMMARY].text && (
-          <SectionSubject
-            name={ESubjectSections.SUMMARY}
-            isModeActive={activeSection === ESubjectSections.SUMMARY}
-            toggleActiveSection={toggleActiveSection}
-            subjectSection={subject?.[ESubjectSections.SUMMARY]}
-            onSubtextClick={handleSubtextClick}
-            playedMilliseconds={playedMilliseconds}
-          />
+        {Object.values(ESubjectSections).map((section) =>
+          subject?.[section]?.text ? (
+            <SectionSubject
+              key={section}
+              name={section}
+              isModeActive={activeSection === section}
+              toggleActiveSection={() => toggleActiveSection(section)}
+              subjectSection={subject[section]}
+              onSubtextClick={handleSubtextClick}
+              playedMilliseconds={playedMilliseconds}
+            />
+          ) : null,
         )}
       </Stack>
       {activeSection && subject?.[activeSection]?.audioUrl && (
